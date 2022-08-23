@@ -44,6 +44,15 @@ function App() {
       city: '',
       pincode: '',
       standard: '',
+      currentStudent: {
+        fullName: 'aaa',
+        email: 'ss',
+        phone: 'ssa',
+        state: 'a',
+        city: 'z',
+        pincode: 'dd',
+        standard: 'w',
+      },
     },
   });
   const EditableCell = useMemo(
@@ -65,17 +74,12 @@ function App() {
         if (index == editSelectedIndex) {
           return (
             <Controller
-              name={id}
+              name={`currentStudent.${id}`}
               control={methods.control}
               render={({ field }) => (
-                <TextField {...field} placeholder="enter your fullname" />
+                <TextField {...field} placeholder={`Enter Your ${id}`} />
               )}
             />
-            // <TextField
-            //   value={value}
-            //   onChange={(e) => setValue(e.target.value)}
-            //   onBlur={onBlur}
-            // />
           );
         } else {
           return initialValue;
@@ -86,7 +90,6 @@ function App() {
 
   const defaultColumn = {
     cell: (props) => {
-      // console.log(props);
       return <EditableCell {...props} />;
     },
   };
@@ -136,7 +139,7 @@ function App() {
                 <>
                   <IconButton
                     onClick={methods.handleSubmit((data) => {
-                      onSubmit({ id: row.original.id, ...data });
+                      onSubmit({ id: row.original.id, ...data.currentStudent });
                       setEditSelectedIndex(null);
                     })}
                   >
@@ -150,7 +153,9 @@ function App() {
                 <>
                   <IconButton
                     onClick={() => {
-                      methods.reset(row.original.attributes);
+                      methods.reset({
+                        currentStudent: row.original.attributes,
+                      });
                       setEditSelectedIndex(row.index);
                     }}
                   >

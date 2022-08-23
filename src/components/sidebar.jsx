@@ -30,20 +30,11 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
 }));
 
 const Sidebar = ({ table }) => {
-  const { control, handleSubmit, reset, getValues } = useFormContext();
-  const [isEditing, setIsEditing] = useState(false);
-  const id = getValues('id');
+  const { control, handleSubmit, reset } = useFormContext();
 
-  useEffect(() => {
-    if (id) setIsEditing(true);
-    else setIsEditing(false);
-  }, [id]);
   const onSubmit = (data) => {
-    if (isEditing) {
-      table.options.meta.updateStudent({ id, data });
-    } else {
-      table.options.meta.addStudent({ data });
-    }
+    table.options.meta.addStudent({ data });
+
     reset({
       fullName: '',
       email: '',
@@ -146,11 +137,9 @@ const Sidebar = ({ table }) => {
             <PrimaryButton
               fullWidth
               type="submit"
-              startIcon={
-                isEditing ? <DoneTwoToneIcon /> : <AddCircleTwoToneIcon />
-              }
+              startIcon={<AddCircleTwoToneIcon />}
             >
-              {isEditing ? 'update student' : 'create new student'}
+              'create new student
             </PrimaryButton>
           </Grid>
         </Grid>
