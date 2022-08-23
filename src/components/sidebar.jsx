@@ -72,73 +72,98 @@ const Sidebar = ({ table }) => {
         background: '#250710',
         p: 4,
         borderRadius: 5,
+        mb: 2,
       }}
     >
-      <Stack spacing={4}>
-        <Typography variant="h4" align="center" color="primary.dark">
+      <Stack spacing={4} direction="row" alignItems="center">
+        <Typography variant="h1" align="center" color="primary.dark">
           स्टुडेंट{' '}
           <Typography variant="inherit" fontWeight="700" display="inline">
             CRUD
           </Typography>
         </Typography>
-        <Box>
-          <Controller
-            name="fullName"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your fullname" />
-            )}
-          />
-
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your e-mail address" />
-            )}
-          />
-          <Controller
-            name="phone"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your phone number" />
-            )}
-          />
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your state" />
-            )}
-          />
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your city" />
-            )}
-          />
-          <Controller
-            name="pincode"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your pincode" />
-            )}
-          />
-          <Controller
-            name="standard"
-            control={control}
-            render={({ field }) => (
-              <CustomInput {...field} placeholder="enter your class" />
-            )}
-          />
-        </Box>
-        <PrimaryButton
-          type="submit"
-          startIcon={isEditing ? <DoneTwoToneIcon /> : <AddCircleTwoToneIcon />}
-        >
-          {isEditing ? 'update student' : 'create new student'}
-        </PrimaryButton>
+        <Grid container rowSpacing={2} columnSpacing={2}>
+          <Grid item md={12}>
+            {' '}
+            <Controller
+              name="fullName"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your fullname" />
+              )}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <CustomInput
+                  {...field}
+                  placeholder="enter your e-mail address"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your phone number" />
+              )}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <Controller
+              name="state"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your state" />
+              )}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <Controller
+              name="city"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your city" />
+              )}
+            />{' '}
+          </Grid>
+          <Grid item md={4}>
+            {' '}
+            <Controller
+              name="pincode"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your pincode" />
+              )}
+            />
+          </Grid>
+          <Grid item md={4}>
+            {' '}
+            <Controller
+              name="standard"
+              control={control}
+              render={({ field }) => (
+                <CustomInput {...field} placeholder="enter your class" />
+              )}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <PrimaryButton
+              fullWidth
+              type="submit"
+              startIcon={
+                isEditing ? <DoneTwoToneIcon /> : <AddCircleTwoToneIcon />
+              }
+            >
+              {isEditing ? 'update student' : 'create new student'}
+            </PrimaryButton>
+          </Grid>
+        </Grid>
       </Stack>
     </Box>
   );

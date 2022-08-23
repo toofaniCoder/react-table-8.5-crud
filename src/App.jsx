@@ -138,10 +138,10 @@ function App() {
           <Box sx={boxStyle}>
             <Container maxWidth="xl" sx={{ py: 2 }}>
               <Grid columnSpacing={4} container>
-                <Grid item md={3}>
+                <Grid item md={12}>
                   <Sidebar table={table} />
                 </Grid>
-                <Grid item md={9}>
+                <Grid item md={12}>
                   <Home table={table} />
                 </Grid>
               </Grid>
