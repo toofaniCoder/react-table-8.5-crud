@@ -6,6 +6,8 @@ import theme from './theme';
 import { Box, Grid, IconButton, TextField } from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import { Container } from '@mui/system';
 import axios from 'axios';
 import Home from './components/home';
@@ -113,16 +115,29 @@ function App() {
         cell: ({ row, table }) => {
           return (
             <>
-              <IconButton onClick={() => setEditSelectedIndex(row.index)}>
-                <EditTwoToneIcon color="primary" />
-              </IconButton>
-              <IconButton
-                onClick={() =>
-                  table.options.meta.deleteStudent(row.original.id)
-                }
-              >
-                <DeleteTwoToneIcon color="error" />
-              </IconButton>
+              {editSelectedIndex == row.index ? (
+                <>
+                  <IconButton>
+                    <CheckIcon color="success" />
+                  </IconButton>
+                  <IconButton onClick={() => setEditSelectedIndex(null)}>
+                    <ClearIcon color="error" />
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <IconButton onClick={() => setEditSelectedIndex(row.index)}>
+                    <EditTwoToneIcon color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={() =>
+                      table.options.meta.deleteStudent(row.original.id)
+                    }
+                  >
+                    <DeleteTwoToneIcon color="error" />
+                  </IconButton>
+                </>
+              )}
             </>
           );
         },
