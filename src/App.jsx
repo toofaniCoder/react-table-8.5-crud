@@ -1,9 +1,9 @@
 import './App.css';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
-import { Box, Grid, IconButton } from '@mui/material';
+import { Box, Grid, IconButton, TextField } from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { Container } from '@mui/system';
@@ -32,7 +32,46 @@ const columnHelper = createColumnHelper();
 function App() {
   const [data, setData] = useState([]);
   const defaultData = useMemo(() => [], []);
+  const [editSelectedIndex, setEditSelectedIndex] = useState(null);
   const methods = useForm();
+  const EditableCell = useMemo(
+    () =>
+      ({ getValue, row: { index } }) => {
+        const initialValue = getValue();
+        // We need to keep and update the state of the cell normally
+        const [value, setValue] = useState(initialValue);
+        // When the input is blurred, we'll call our table meta's updateData function
+        const onBlur = () => {
+          // table.options.meta?.updateData(index, id, value);
+        };
+
+        // If the initialValue is changed external, sync it up with our state
+        useEffect(() => {
+          setValue(initialValue);
+        }, [initialValue]);
+
+        if (index == editSelectedIndex) {
+          return (
+            <TextField
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onBlur={onBlur}
+            />
+          );
+        } else {
+          return initialValue;
+        }
+      },
+    [editSelectedIndex]
+  );
+
+  const defaultColumn = {
+    cell: (props) => {
+      // console.log(props);
+      return <EditableCell {...props} />;
+    },
+  };
+
   const columns = useMemo(
     () => [
       columnHelper.accessor(({ attributes }) => attributes.fullName, {
@@ -74,14 +113,7 @@ function App() {
         cell: ({ row, table }) => {
           return (
             <>
-              <IconButton
-                onClick={() =>
-                  methods.reset({
-                    id: row.original.id,
-                    ...row.original.attributes,
-                  })
-                }
-              >
+              <IconButton onClick={() => setEditSelectedIndex(row.index)}>
                 <EditTwoToneIcon color="primary" />
               </IconButton>
               <IconButton
@@ -96,7 +128,7 @@ function App() {
         },
       }),
     ],
-    []
+    [editSelectedIndex]
   );
 
   useEffect(() => {
@@ -109,9 +141,15 @@ function App() {
 
   const table = useReactTable({
     data: data ?? defaultData,
+    defaultColumn,
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
+      addId: (Rowid) => {
+        let id = Rowid;
+        console.log(id);
+        return id;
+      },
       addStudent: async (student) => {
         const { data } = await axios.post('/students', student);
         setData((prevState) => [data.data, ...prevState]);
