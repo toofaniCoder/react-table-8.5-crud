@@ -30,17 +30,7 @@ const PrimaryButton = styled(Button)(({ theme }) => ({
 }));
 
 const Sidebar = ({ table }) => {
-  const { control, handleSubmit, reset, getValues } = useFormContext({
-    defaultValues: {
-      fullName: '',
-      email: '',
-      phone: '',
-      state: '',
-      city: '',
-      pincode: '',
-      standard: '',
-    },
-  });
+  const { control, handleSubmit, reset, getValues } = useFormContext();
   const [isEditing, setIsEditing] = useState(false);
   const id = getValues('id');
 

@@ -17,7 +17,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
 
 axios.defaults.baseURL = 'http://localhost:1337/api';
 
@@ -35,10 +35,20 @@ function App() {
   const [data, setData] = useState([]);
   const defaultData = useMemo(() => [], []);
   const [editSelectedIndex, setEditSelectedIndex] = useState(null);
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      state: '',
+      city: '',
+      pincode: '',
+      standard: '',
+    },
+  });
   const EditableCell = useMemo(
     () =>
-      ({ getValue, row: { index } }) => {
+      ({ getValue, row: { index }, column: { id } }) => {
         const initialValue = getValue();
         // We need to keep and update the state of the cell normally
         const [value, setValue] = useState(initialValue);
@@ -54,11 +64,18 @@ function App() {
 
         if (index == editSelectedIndex) {
           return (
-            <TextField
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onBlur={onBlur}
+            <Controller
+              name={id}
+              control={methods.control}
+              render={({ field }) => (
+                <TextField {...field} placeholder="enter your fullname" />
+              )}
             />
+            // <TextField
+            //   value={value}
+            //   onChange={(e) => setValue(e.target.value)}
+            //   onBlur={onBlur}
+            // />
           );
         } else {
           return initialValue;
@@ -117,7 +134,12 @@ function App() {
             <>
               {editSelectedIndex == row.index ? (
                 <>
-                  <IconButton>
+                  <IconButton
+                    onClick={methods.handleSubmit((data) => {
+                      onSubmit({ id: row.original.id, ...data });
+                      setEditSelectedIndex(null);
+                    })}
+                  >
                     <CheckIcon color="success" />
                   </IconButton>
                   <IconButton onClick={() => setEditSelectedIndex(null)}>
@@ -126,7 +148,12 @@ function App() {
                 </>
               ) : (
                 <>
-                  <IconButton onClick={() => setEditSelectedIndex(row.index)}>
+                  <IconButton
+                    onClick={() => {
+                      methods.reset(row.original.attributes);
+                      setEditSelectedIndex(row.index);
+                    }}
+                  >
                     <EditTwoToneIcon color="primary" />
                   </IconButton>
                   <IconButton
@@ -160,11 +187,6 @@ function App() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      addId: (Rowid) => {
-        let id = Rowid;
-        console.log(id);
-        return id;
-      },
       addStudent: async (student) => {
         const { data } = await axios.post('/students', student);
         setData((prevState) => [data.data, ...prevState]);
@@ -183,6 +205,9 @@ function App() {
       },
     },
   });
+
+  const onSubmit = ({ id, ...data }) =>
+    table.options.meta.updateStudent({ id, data });
   return (
     <>
       <ThemeProvider theme={theme}>
